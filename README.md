@@ -1,5 +1,7 @@
 # lt-eli-mcp
 
+<!-- mcp-name: io.github.matematicsolutions/lt-eli-mcp -->
+
 An MCP server for the Lithuanian **Register of Legal Acts (TAR)** via the **data.gov.lt** open-data
 API. It searches Lithuanian legislation by title and fetches full text, with verifiable citations.
 
