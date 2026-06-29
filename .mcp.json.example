@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "lt-eli-mcp": {
+      "command": "lt-eli-mcp",
+      "env": {
+        "LT_ELI_BASE_URL": "https://get.data.gov.lt",
+        "LT_ELI_CACHE_DIR": "~/.matematic/cache/lt-eli",
+        "LT_ELI_AUDIT_DIR": "~/.matematic/audit"
+      }
+    }
+  }
+}
