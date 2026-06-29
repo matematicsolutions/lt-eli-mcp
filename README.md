@@ -29,6 +29,14 @@ and `source_url`.
 
 ## Install
 
+Run it with no install step (once published to PyPI):
+
+```bash
+uvx lt-eli-mcp
+```
+
+Or from source:
+
 ```bash
 cd lt-eli-mcp
 pip install -e .
