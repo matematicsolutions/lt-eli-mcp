@@ -37,6 +37,7 @@ This MCP server exposes the Lithuanian Register of Legal Acts (TAR) through the 
 
 ## Hard constraints
 
+- **Do not answer past the edge of this corpus** - when a search comes back empty, or the question touches material this connector does not carry, call `lt_coverage` and relay what it says is missing. Absence here is not absence in the law.
 - **ELI is national, not data.europa.eu** - Lithuania has no `data.europa.eu` ELI for the TAR dataset; `eli_uri` carries the canonical `e-tar.lt` legalAct URL (the stable national identifier). Relay the `eli_note`. Do not invent it - it comes from the record.
 - **Search matches the title** - `lt_search` filters on the act title (`pavadinimas`), not the body of the law.
 - **The TAR code is the key** - address acts by `tar_kodas` (e.g. "2014-21296"); it is the stable identifier returned by search.
