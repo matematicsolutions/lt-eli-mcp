@@ -24,6 +24,7 @@ API (the data.gov.lt Spinta endpoint).
 | `lt_search` | Find acts whose title contains a substring (optionally by type). |
 | `lt_get_act` | Metadata for an act by its TAR code. |
 | `lt_get_text` | Full Lithuanian text of an act by its TAR code. |
+| `lt_coverage` | Declare what this connector covers, when each family was captured, and - explicitly - what it does NOT cover. Every gap carries a fallback. |
 
 Every response carries the contract: `eli_uri` (the `e-tar.lt` URL, e.g.
 `https://e-tar.lt/portal/lt/legalAct/...`), `human_readable_citation` (title + official number),
