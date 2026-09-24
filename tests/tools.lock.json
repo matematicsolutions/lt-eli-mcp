@@ -1,0 +1,586 @@
+{
+  "package_version": "0.3.3",
+  "tools": {
+    "lt_coverage": {
+      "descriptor": {
+        "annotations": {
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": true,
+          "readOnlyHint": true
+        },
+        "description": "Declare what this connector covers, how it is sourced, and what it does NOT cover.\n\nCall this before telling a user that the law \"does not contain\" something, and whenever\na search comes back empty: the absence may be a gap in this connector rather than in the\nlaw. Every gap carries a fallback saying where to look instead.\n\nReturns:\n    ``Coverage`` with families, an as-of note, and a non-empty list of known gaps.",
+        "inputSchema": {
+          "additionalProperties": false,
+          "properties": {},
+          "type": "object"
+        },
+        "meta": {
+          "fastmcp": {
+            "tags": []
+          }
+        },
+        "name": "lt_coverage",
+        "outputSchema": {
+          "additionalProperties": true,
+          "description": "What this connector covers, how it is sourced, and what it does not cover.",
+          "properties": {
+            "as_of_note": {
+              "description": "States what the dates mean, and what they do not promise.",
+              "type": "string"
+            },
+            "families": {
+              "items": {
+                "additionalProperties": true,
+                "description": "One data family this connector exposes.",
+                "properties": {
+                  "captured_at": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "description": "Date this family was last captured (ISO). None when queried live."
+                  },
+                  "live": {
+                    "default": true,
+                    "description": "True when queried live instead of from a snapshot.",
+                    "type": "boolean"
+                  },
+                  "name": {
+                    "description": "Data family, e.g. 'Federal legislation'.",
+                    "type": "string"
+                  },
+                  "source": {
+                    "description": "Official source the data comes from.",
+                    "type": "string"
+                  },
+                  "tool": {
+                    "description": "Tool or tools that reach this family.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "tool",
+                  "source"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "known_gaps": {
+              "description": "Never empty. An empty list would mean 'not checked', not 'no gaps'.",
+              "items": {
+                "additionalProperties": true,
+                "description": "A known, named hole in this connector's coverage - plus the way around it.",
+                "properties": {
+                  "fallback": {
+                    "description": "Where to go instead.",
+                    "type": "string"
+                  },
+                  "family": {
+                    "description": "Which family the gap belongs to.",
+                    "type": "string"
+                  },
+                  "id": {
+                    "description": "Stable gap identifier.",
+                    "type": "string"
+                  },
+                  "missing": {
+                    "description": "What is NOT available through this connector.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "family",
+                  "missing",
+                  "fallback"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "status": {
+              "default": "ok",
+              "enum": [
+                "ok",
+                "degraded",
+                "failed"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "as_of_note"
+          ],
+          "type": "object"
+        }
+      },
+      "sha256": "cdadcf297877ac804c60f1627a7af10ca39342dd2fb92e82d6da3eff894d1292"
+    },
+    "lt_get_act": {
+      "descriptor": {
+        "annotations": {
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": true,
+          "readOnlyHint": true
+        },
+        "description": "Fetch Lithuanian act metadata by its TAR code.",
+        "inputSchema": {
+          "additionalProperties": false,
+          "properties": {
+            "tar_kodas": {
+              "description": "e.g. ``\"2014-21296\"`` (from ``lt_search``).",
+              "type": "string"
+            }
+          },
+          "required": [
+            "tar_kodas"
+          ],
+          "type": "object"
+        },
+        "meta": {
+          "fastmcp": {
+            "tags": []
+          }
+        },
+        "name": "lt_get_act",
+        "outputSchema": {
+          "additionalProperties": true,
+          "description": "A Lithuanian legal act (from the TAR Spinta API).",
+          "properties": {
+            "dataset_note": {
+              "default": "The Lithuanian Register of Legal Acts (TAR) is served as open data via the data.gov.lt Spinta API (dataset gov/lrsk/teises_aktai/Dokumentas, CC BY 4.0). Acts are addressed by their TAR code (tar_kodas, e.g. '2014-21296'); discover acts with lt_search (matches the title). Full text is in the tekstas_lt field. Language: Lithuanian.",
+              "type": "string"
+            },
+            "date_adopted": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "date_published": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "document_type": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "eli_note": {
+              "default": "Lithuania has no data.europa.eu ELI for the TAR dataset. eli_uri carries the canonical e-tar.lt legalAct URL (the stable national identifier), which is also the source_url.",
+              "type": "string"
+            },
+            "eli_uri": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "human_readable_citation": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "number": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "source_url": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "tar_kodas": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "title": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "validity": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            }
+          },
+          "type": "object"
+        }
+      },
+      "sha256": "b8374095ed37643c6e8456ebf6bd51c86fce6300c077ff6cb2470178f47c8f8f"
+    },
+    "lt_get_text": {
+      "descriptor": {
+        "annotations": {
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": true,
+          "readOnlyHint": true
+        },
+        "description": "Fetch the full Lithuanian text of an act by its TAR code.",
+        "inputSchema": {
+          "additionalProperties": false,
+          "properties": {
+            "tar_kodas": {
+              "description": "e.g. ``\"2014-21296\"``.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "tar_kodas"
+          ],
+          "type": "object"
+        },
+        "meta": {
+          "fastmcp": {
+            "tags": []
+          }
+        },
+        "name": "lt_get_text",
+        "outputSchema": {
+          "additionalProperties": true,
+          "description": "Result of ``lt_get_text`` (full text from tekstas_lt).",
+          "properties": {
+            "byte_size": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "content": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "dataset_note": {
+              "default": "The Lithuanian Register of Legal Acts (TAR) is served as open data via the data.gov.lt Spinta API (dataset gov/lrsk/teises_aktai/Dokumentas, CC BY 4.0). Acts are addressed by their TAR code (tar_kodas, e.g. '2014-21296'); discover acts with lt_search (matches the title). Full text is in the tekstas_lt field. Language: Lithuanian.",
+              "type": "string"
+            },
+            "eli_note": {
+              "default": "Lithuania has no data.europa.eu ELI for the TAR dataset. eli_uri carries the canonical e-tar.lt legalAct URL (the stable national identifier), which is also the source_url.",
+              "type": "string"
+            },
+            "eli_uri": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "format": {
+              "default": "text/plain",
+              "type": "string"
+            },
+            "human_readable_citation": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "source_url": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "tar_kodas": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            },
+            "title": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null
+            }
+          },
+          "type": "object"
+        }
+      },
+      "sha256": "73e26fdb2c60d71221ad294ca45027359a592cb7aab7bf53ef8175beb53bcbc6"
+    },
+    "lt_search": {
+      "descriptor": {
+        "annotations": {
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": true,
+          "readOnlyHint": true
+        },
+        "description": "Search Lithuanian acts whose title contains a substring.",
+        "inputSchema": {
+          "additionalProperties": false,
+          "properties": {
+            "contains": {
+              "description": "substring matched against the act title (Lithuanian ``pavadinimas``).",
+              "type": "string"
+            },
+            "doc_type": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "description": "optional Lithuanian act type (``rusis``), e.g. ``\"Istatymas\"`` (law),\n``\"Isakymas\"`` (order). Match the exact Lithuanian spelling."
+            },
+            "limit": {
+              "default": 50,
+              "description": "max hits (1..200, default 50).",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "contains"
+          ],
+          "type": "object"
+        },
+        "meta": {
+          "fastmcp": {
+            "tags": []
+          }
+        },
+        "name": "lt_search",
+        "outputSchema": {
+          "additionalProperties": true,
+          "description": "Result of ``lt_search``.",
+          "properties": {
+            "dataset_note": {
+              "default": "The Lithuanian Register of Legal Acts (TAR) is served as open data via the data.gov.lt Spinta API (dataset gov/lrsk/teises_aktai/Dokumentas, CC BY 4.0). Acts are addressed by their TAR code (tar_kodas, e.g. '2014-21296'); discover acts with lt_search (matches the title). Full text is in the tekstas_lt field. Language: Lithuanian.",
+              "type": "string"
+            },
+            "items": {
+              "items": {
+                "additionalProperties": true,
+                "description": "A single act in a ``lt_search`` result.",
+                "properties": {
+                  "date_adopted": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null
+                  },
+                  "document_type": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null
+                  },
+                  "eli_uri": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null
+                  },
+                  "human_readable_citation": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null
+                  },
+                  "number": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null
+                  },
+                  "source_url": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null
+                  },
+                  "tar_kodas": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null
+                  },
+                  "title": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null
+                  },
+                  "validity": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "total": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "total"
+          ],
+          "type": "object"
+        }
+      },
+      "sha256": "322770a29415e780d2a2871760012aea618f73a2154dd3e259bff3b744fac523"
+    }
+  },
+  "toolset_sha256": "60057e31992f1f7004cf9a0bb3ea7f8712c0b923e6b6a512c2a0e93de1c5413f"
+}
